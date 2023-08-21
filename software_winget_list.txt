@@ -1,0 +1,9 @@
+Git.Git
+JetBrains.Toolbox
+Microsoft.VisualStudioCode
+Microsoft.WindowsTerminal
+RARLab.WinRAR
+RProject.R
+Rustlang.Rustup
+VideoLAN.VLC
+    

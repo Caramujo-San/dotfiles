@@ -1,0 +1,39 @@
+{
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "workbench.settings.editor": "ui",
+    "workbench.settings.openDefaultSettings": true,
+    "python.formatting.provider": "autopep8",
+    "editor.formatOnSave": false,
+    "files.autoSave": "afterDelay",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "files.associations": {
+        "*.kt": "kotlin",
+        "*.json": "jsonc",
+        "*.js": "jsonc"
+    },
+    "[kotlin]": {},
+    "code-runner.runInTerminal": true,
+    "php.validate.executablePath": "",
+    "[php]": {},
+    "php-intellisense.trace.server": "messages",
+    "js/ts.implicitProjectConfig.checkJs": true,
+    "editor.semanticTokenColorCustomizations": {
+    
+    },
+    "editor.semanticHighlighting.enabled": true,
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "[javascript]": {
+    
+        "editor.maxTokenizationLineLength": 2500
+    },
+    "code-runner.showExecutionMessage": false
+}
