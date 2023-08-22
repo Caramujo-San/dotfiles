@@ -33,7 +33,7 @@ function Install-Programs {
 
     Begin {
 	    # Uncomment the line below to activate -whatif
-        $WhatIfPreference = $True 
+        # $WhatIfPreference = $True 
 	
 	    # Uncomment the line below not to ask for confirmation to install
 		# $ConfirmPreference = "High"
@@ -74,7 +74,7 @@ Function Add-Symlink {
 
     Begin {
 	    # Uncomment the line below to activate -whatif
-	    $WhatIfPreference = $True
+	    # $WhatIfPreference = $True
 	
 	    # Uncomment the line below not to ask for confirmation when moving each file
 		# $ConfirmPreference = "High"
@@ -133,7 +133,7 @@ else {
 $path_list_hashtable = @{
     "${HOME}\.gitconfig" = "${PSScriptRoot}\.gitconfig";
     "${HOME}\.gitignore" = "${PSScriptRoot}\.gitignore";
-    "${PROFILE}" "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1";
+    "${PROFILE}" = "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1";
     "${HOME}\AppData\Roaming\vlc\vlcrc" = "${PSScriptRoot}\VLC media player\vlcrc"
 }
 
