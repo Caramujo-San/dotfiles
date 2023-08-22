@@ -124,17 +124,29 @@ if ($DoInstall -eq "install") {
 }
 else {
     # $WingetCommandParam = "search";
-    Write-Host "Exiting installation... Now trying configuration...`n"
+    Write-Host "`nExiting installation... Now trying configuration...`n"
 }
 
 
 # ----------------------------------------------------
 
+$path_list_hashtable = @{
+    "${HOME}\.gitconfig" = "${PSScriptRoot}\.gitconfig";
+    "${HOME}\.gitignore" = "${PSScriptRoot}\.gitignore";
+    "${PROFILE}" "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1";
+    "${HOME}\AppData\Roaming\vlc\vlcrc" = "${PSScriptRoot}\VLC media player\vlcrc"
+}
 
 # Symlinc software config files
 $DoInstall = Read-Host -Prompt "To customize with your own configuration files, type 'symlinc' to continue"
 if ($DoInstall -eq "symlinc") {
     $WingetCommandParam = $DoInstall
+
+    # Prompt user to Symlink between each pair of files
+    foreach ($h in $path_list_hashtable.GetEnumerator()) {
+        Write-Output "Replacing .gitconfig"
+        Add-Symlink $($h.Name) $($h.Value) > $null -Confirm
+    }
 }
 else {
     # $WingetCommandParam = "search";
@@ -144,14 +156,19 @@ else {
 }
 
 # Creates a Symlink between files
-Write-Output "Replacing .gitconfig"
-Add-Symlink "${HOME}\.gitconfig" "${PSScriptRoot}\.gitconfig" > $null -Confirm
-Write-Output "Replacing .gitignore"
-Add-Symlink "${HOME}\.gitignore" "${PSScriptRoot}\.gitignore" > $null -Confirm
+# Write-Output "Replacing .gitconfig"
+# Add-Symlink "${HOME}\.gitconfig" "${PSScriptRoot}\.gitconfig" > $null -Confirm
+# Write-Output "Replacing .gitignore"
+# Add-Symlink "${HOME}\.gitignore" "${PSScriptRoot}\.gitignore" > $null -Confirm
 
-Write-Output "Replacing Powershell Profile"
-Add-Symlink "${PROFILE}" "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1" > $null -Confirm
+# Write-Output "Replacing Powershell Profile"
+# Add-Symlink "${PROFILE}" "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1" > $null -Confirm
 
+# Write-Output "Replacing VLC's vlcrc"
+# Add-Symlink "${HOME}\AppData\Roaming\vlc\vlcrc" "${PSScriptRoot}\VLC media player\vlcrc" > $null -Confirm
+
+
+# VSCode settings
 Write-Output "Attempting to Replace Windows Terminal settings"
 $StorePackages = "${HOME}\AppData\Local\Packages\*Microsoft.WindowsTerminal*"
 $WindowsTerminalDir = Get-ChildItem $StorePackages -ErrorAction SilentlyContinue
