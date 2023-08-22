@@ -133,6 +133,34 @@ else {
 
 # ----------------------------------------------------
 
+
+# Array with software name from software_winget_list
+$software_names = @(
+    "4KVideoDownloader",
+    "Anki",
+    "Apache Xampp",
+    "Calibre",
+    "Git",
+    "JetBrains.Toolbox",
+    "Microsoft Visual Studio Code",
+    "Microsoft Windows Terminal",
+    "OBSProject.OBSStudio",
+    "OpenOffice",
+    "JavaRuntimeEnvironment",
+    "Oracle.VirtualBox",
+    "PostgreSQL",
+    "R",
+    "Posit.RStudio",
+    "Rustlang.Rustup",
+    "Slack",
+    "StarUML",
+    "VideoLAN.VLC",
+    "WinRAR",
+    "Assistente de Instalação do Windows 11",
+    "Wireshark",
+    "Wondershare PDFelement"
+)
+
 $path_list_hashtable = @{
     "${HOME}\.gitconfig" = "${PSScriptRoot}\.gitconfig";
     "${HOME}\.gitignore" = "${PSScriptRoot}\.gitignore";
