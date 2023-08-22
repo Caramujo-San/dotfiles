@@ -4,5 +4,6 @@ Microsoft.VisualStudioCode
 Microsoft.WindowsTerminal
 RARLab.WinRAR
 RProject.R
+Posit.RStudio
 Rustlang.Rustup
 VideoLAN.VLC
