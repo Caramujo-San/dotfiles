@@ -1,3 +1,10 @@
+<# 
+.LINK
+    https://github.com/microsoft/winget-cli/blob/master/doc/Completion.md
+.LINK
+    https://learn.microsoft.com/en-us/powershell/scripting/learn/shell/tab-completion?view=powershell-7.3
+#>
+
 # Shows navigable menu of all options when hitting Tab
 
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
