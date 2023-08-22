@@ -13,14 +13,6 @@ A `dotfiles` repository is an attempt to keep multiple settings in-sync across m
 
 --------------
 
-### Reference sources
-
-1. (https://geekflare.com/python-run-bash/)
-2. (https://shellgeek.com/powershell-psscriptroot-automatic-variable/)
-3. (https://www.jetbrains.com/help/idea/sharing-your-ide-settings.html#IDE_settings_sync)
-4. (https://dotfiles.github.io/)
-5. (https://medium.com/@webprolific/getting-started-with-dotfiles-43c3602fd789)
-
 Technique used for this repo:
 
 * Symbolic links linking a git repo in on Windows
@@ -56,3 +48,13 @@ config add .bashrc
 config commit -m "Add bashrc"
 config push
 ```
+
+--------------
+
+### Reference sources
+
+1. (https://medium.com/@webprolific/getting-started-with-dotfiles-43c3602fd789)
+2. (https://dotfiles.github.io/)
+3. (https://shellgeek.com/powershell-psscriptroot-automatic-variable/)
+4. (https://geekflare.com/python-run-bash/)
+5. (https://www.jetbrains.com/help/idea/sharing-your-ide-settings.html#IDE_settings_sync)

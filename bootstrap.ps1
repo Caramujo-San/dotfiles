@@ -124,8 +124,10 @@ if ($DoInstall -eq "install") {
 }
 else {
     # $WingetCommandParam = "search";
-    Write-Debug "You typed $DoInstall"
-    Write-Host "Exiting installation... Now trying configuration...`n"
+    $DebugPreference = "Continue"
+    Write-Debug -Message "You typed the word '$DoInstall'" 
+    Write-Host "    Exiting installation...`
+    ...Now trying configuration`n"
 }
 
 
