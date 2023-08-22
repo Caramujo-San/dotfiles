@@ -23,10 +23,10 @@ A `dotfiles` repository is an attempt to keep multiple settings in-sync across m
 
 Technique used for this repo:
 
-* Symbolic links linking a git repo in Desktop on Windows
-  1. Created a Python script to install and call a Powershell script
-  2. crafted a Powershell script to link the files
-  1. Check out the repo (https://github.com/rodolphocastro/dotfiles/blob/master/bootstrap.ps1)
+* Symbolic links linking a git repo in on Windows
+  1. Created a Powershell script to install winget softwares
+  2. and crafted to link configuration files
+  3. Check out the repo (https://github.com/rodolphocastro/dotfiles/blob/master/bootstrap.ps1)
 
 * Storing a Git bare repository in a "side" folder .cfg on Linux 
    1. Created a git bare repository
@@ -37,15 +37,16 @@ Technique used for this repo:
 
 ## Windows dotfiles
 
-1. Git clone the repo or download it to the Desktop 
+1. Git clone the repo or download it 
 2. Change directory to the dotfiles folder
-3. Then run the bootstrap.py
+3. Then run the bootstrap.ps1 on the terminal
 
 --------------
 
 ## Linux dotfiles
 
-1. Run bootstrap.py in the $HOME directory
+1. Git clone the repo or download it 
+2. Run bootstrap.sh in the $HOME directory
 
 After setup executed, any file within the $HOME folder can be versioned with normal commands, replacing git with config alias.
 
