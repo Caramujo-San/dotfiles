@@ -124,7 +124,8 @@ if ($DoInstall -eq "install") {
 }
 else {
     # $WingetCommandParam = "search";
-    Write-Host "`nExiting installation... Now trying configuration...`n"
+    Write-Debug "You typed $DoInstall"
+    Write-Host "Exiting installation... Now trying configuration...`n"
 }
 
 
@@ -150,7 +151,7 @@ if ($DoInstall -eq "symlinc") {
 }
 else {
     # $WingetCommandParam = "search";
-    Write-Host "`nExiting customization... `n"
+    Write-Host "`nExiting customization..."
     Write-Host "Have a nice day !`n"
     Exit -4
 }
@@ -195,4 +196,4 @@ Write-Output "Done, your profile will be reloaded"
 Write-Output "`n"
 
 # Reloads the Profile
-. $PROFILE
+. {$PROFILE}
