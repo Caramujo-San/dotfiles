@@ -16,6 +16,7 @@ $SoftwareListFile = ".\software_winget_list.txt"
 #                    Functions definitions                   |
 #------------------------------------------------------------#
 
+
 # Install programs in the software_winget_list.txt file
 function Install-Programs {
 
@@ -32,7 +33,7 @@ function Install-Programs {
 
     Begin {
 	    # Uncomment the line below to activate -whatif
-        # $WhatIfPreference = $True 
+        $WhatIfPreference = $True 
 	
 	    # Uncomment the line below not to ask for confirmation to install
 		# $ConfirmPreference = "High"
@@ -55,6 +56,9 @@ function Install-Programs {
 }
 
 
+# ----------------------------------------------------
+
+
 # Creates a Symlink between two files
 Function Add-Symlink {
     [CmdletBinding(
@@ -70,7 +74,7 @@ Function Add-Symlink {
 
     Begin {
 	    # Uncomment the line below to activate -whatif
-	    # $WhatIfPreference = $True
+	    $WhatIfPreference = $True
 	
 	    # Uncomment the line below not to ask for confirmation when moving each file
 		# $ConfirmPreference = "High"
@@ -96,11 +100,12 @@ Function Add-Symlink {
 #                     Functions calls                        |
 #------------------------------------------------------------#
 
+
 # Checks if winget command is currently available on Powershell
 if (!(Get-Command winget -ErrorAction Stop)) {
     Write-Host "Winget not found, unable to continue"
     Write-Host "Check on https://github.com/microsoft/winget-cli for instructions"
-    exit -1
+    exit -3
 }
 else {
     Write-Host "`nWinget command-line tool is available."
@@ -108,19 +113,35 @@ else {
 
 # Search or install
 Write-Output "This script will attempt to install multiple softwares on your system"
-$DoInstall = Read-Host -Prompt "To install programs, type 'install' to continue. Else Winget will just search"
+$DoInstall = Read-Host -Prompt "To install programs, type 'install' to continue"
 if ($DoInstall -eq "install") {
+    $WingetCommandParam = $DoInstall
+
+    # Prompt user to install each program
+    foreach ($program in $SoftwareList) {
+        Install-Programs $WingetCommandParam $program -Confirm 
+    }
+}
+else {
+    # $WingetCommandParam = "search";
+    Write-Host "Exiting installation... Now trying configuration...`n"
+}
+
+
+# ----------------------------------------------------
+
+
+# Symlinc software config files
+$DoInstall = Read-Host -Prompt "To customize with your own configuration files, type 'symlinc' to continue"
+if ($DoInstall -eq "symlinc") {
     $WingetCommandParam = $DoInstall
 }
 else {
-    $WingetCommandParam = "search";
+    # $WingetCommandParam = "search";
+    Write-Host "`nExiting customization... `n"
+    Write-Host "Have a nice day !`n"
+    Exit -4
 }
-
-# Prompt user to install each program
-foreach ($program in $SoftwareList) {
-    Install-Programs $WingetCommandParam $program -Confirm 
-}
-
 
 # Creates a Symlink between files
 Write-Output "Replacing .gitconfig"
