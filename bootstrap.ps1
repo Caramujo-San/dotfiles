@@ -28,7 +28,7 @@ function Install-Programs {
         [Parameter(Mandatory=$True)]
         [string]$WingetCommandParam,
         [Parameter(Mandatory=$True)]
-        [string]$program
+        [string]$program2
     )
 
     Begin {
@@ -46,10 +46,10 @@ function Install-Programs {
         # If the user confirmed Yes, or user didn't use -Confirm
         if ($PSCmdlet.ShouldProcess($program)) {
             Write-Host "`n"
-            &winget $WingetCommandParam -e --id $program
+            &winget $WingetCommandParam -e --id $program2
         }
         else {
-            Write-Host $program " will not be installed."
+            Write-Host $program2 " will not be installed."
             return -1
         }
     }
@@ -118,8 +118,8 @@ if ($DoInstall -eq "install") {
     $WingetCommandParam = $DoInstall
 
     # Prompt user to install each program
-    foreach ($program in $SoftwareList) {
-        Install-Programs $WingetCommandParam $program -Confirm 
+    foreach ($program1 in $SoftwareList) {
+        Install-Programs $WingetCommandParam $program1 -Confirm 
     }
 }
 else {
@@ -161,22 +161,55 @@ $software_names = @(
     "Wondershare PDFelement"
 )
 
-$path_list_hashtable = @{
-    "${HOME}\.gitconfig" = "${PSScriptRoot}\.gitconfig";
-    "${HOME}\.gitignore" = "${PSScriptRoot}\.gitignore";
-    "${PROFILE}" = "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1";
-    "${HOME}\AppData\Roaming\vlc\vlcrc" = "${PSScriptRoot}\VLC media player\vlcrc"
+# Nested hashtable with programs' name, fromFilePath and toFilePath
+$path_list_programs = [ordered]@{
+    ".gitconfig" = @{
+        storePackages = "${HOME}\.gitconfig"
+        fromFilePath = "${HOME}\.gitconfig"
+        toFilePath = "${PSScriptRoot}\.gitconfig"
+    }
+    ".gitignore" = @{
+        storePackages = "${HOME}\.gitignore"
+        fromFilePath = "${HOME}\.gitignore"
+        toFilePath = "${PSScriptRoot}\.gitignore"
+    }
+    "profile" = @{
+        storePackages = "${HOME}\Documents\WindowsPowerShell"
+        fromFilePath = "${PROFILE}"
+        toFilePath = "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1"
+    }
+    "vlc" = @{
+        storePackages = "${HOME}\AppData\Roaming\vlc\"
+        fromFilePath = "${HOME}\AppData\Roaming\vlc\vlcrc"
+        toFilePath = "${PSScriptRoot}\VLC media player\vlcrc"
+    }
+    "windows_terminal" = @{
+        storePackages = "${HOME}\AppData\Local\Packages\*Microsoft.WindowsTerminal*"
+        fromFilePath = "${programDir}\LocalState\settings.json"
+        toFilePath = "${PSScriptRoot}\terminal\settings.json"
+    }
 }
 
-# Symlinc software config files
-$DoInstall = Read-Host -Prompt "To customize with your own configuration files, type 'symlinc' to continue"
-if ($DoInstall -eq "symlinc") {
-    $WingetCommandParam = $DoInstall
+# Symlink software config files
+$DoSymlink = Read-Host -Prompt "To customize with your own configuration files, type 'symlink' to continue"
+if ($DoSymlink -eq "symlink") {
+    $WingetCommandParam = $DoSymlink
+    
+    # Check if file exists and Prompt user to Symlink
+    foreach ($name in $path_list_programs.keys) {
 
-    # Prompt user to Symlink between each pair of files
-    foreach ($h in $path_list_hashtable.GetEnumerator()) {
-        Write-Output "Replacing .gitconfig"
-        Add-Symlink $($h.Name) $($h.Value) > $null -Confirm
+        $programName = $path_list_programs[$name]
+
+        # get child items from $StorePackages path in $path_list_programs above
+        Write-Output "Checking for existing files..."
+        $StorePackages = $programName.storePackages
+        $programDir = Get-ChildItem $StorePackages -ErrorAction SilentlyContinue
+
+        # Prompt user to Symlink between each pair of files
+        if ($programDir) {
+            Write-Output "Found $name on ${programDir}, create symlink ?"
+            Add-Symlink $programName.fromFilePath $programName.toFilePath > $null -Confirm
+        }
     }
 }
 else {
@@ -186,28 +219,8 @@ else {
     Exit -4
 }
 
-# Creates a Symlink between files
-# Write-Output "Replacing .gitconfig"
-# Add-Symlink "${HOME}\.gitconfig" "${PSScriptRoot}\.gitconfig" > $null -Confirm
-# Write-Output "Replacing .gitignore"
-# Add-Symlink "${HOME}\.gitignore" "${PSScriptRoot}\.gitignore" > $null -Confirm
-
-# Write-Output "Replacing Powershell Profile"
-# Add-Symlink "${PROFILE}" "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1" > $null -Confirm
-
-# Write-Output "Replacing VLC's vlcrc"
-# Add-Symlink "${HOME}\AppData\Roaming\vlc\vlcrc" "${PSScriptRoot}\VLC media player\vlcrc" > $null -Confirm
-
 
 # VSCode settings
-Write-Output "Attempting to Replace Windows Terminal settings"
-$StorePackages = "${HOME}\AppData\Local\Packages\*Microsoft.WindowsTerminal*"
-$WindowsTerminalDir = Get-ChildItem $StorePackages -ErrorAction SilentlyContinue
-if ($WindowsTerminalDir) {
-    Write-Output "Found WindowsTerminal on ${WindowsTerminalDir}, creating symlink"
-    Add-Symlink "${WindowsTerminalDir}\LocalState\settings.json" "${PSScriptRoot}\terminal\settings.json" > $null -Confirm
-}
-
 Write-Output "Attempting to Replace VSCode settings"
 $VSCodeDir = "${HOME}\AppData\Roaming\Code"
 if (Get-ChildItem $VSCodeDir -ErrorAction SilentlyContinue) {
