@@ -6,12 +6,6 @@
 #>
 
 
-# Get the content of winget programs' ids to variable $SoftwareList
-$SoftwareListFile = ".\software_winget_list.txt"
-[string[]]$SoftwareList = Get-Content $SoftwareListFile
-
-
-
 #------------------------------------------------------------#
 #                    Functions definitions                   |
 #------------------------------------------------------------#
@@ -101,37 +95,9 @@ Function Add-Symlink {
 #------------------------------------------------------------#
 
 
-# Checks if winget command is currently available on Powershell
-if (!(Get-Command winget -ErrorAction Stop)) {
-    Write-Host "Winget not found, unable to continue"
-    Write-Host "Check on https://github.com/microsoft/winget-cli for instructions"
-    exit -3
-}
-else {
-    Write-Host "`nWinget command-line tool is available."
-}
-
-# Search or install
-Write-Output "This script will attempt to install multiple softwares on your system"
-$DoInstall = Read-Host -Prompt "To install programs, type 'install' to continue"
-if ($DoInstall -eq "install") {
-    $WingetCommandParam = $DoInstall
-
-    # Prompt user to install each program
-    foreach ($program1 in $SoftwareList) {
-        Install-Programs $WingetCommandParam $program1 -Confirm 
-    }
-}
-else {
-    # $WingetCommandParam = "search";
-    $DebugPreference = "Continue"
-    Write-Debug -Message "You typed the word '$DoInstall'" 
-    Write-Host "    Exiting installation...`
-    ...Now trying configuration`n"
-}
-
-
-# ----------------------------------------------------
+# Get the content of winget programs' ids to variable $SoftwareList
+$SoftwareListFile = ".\software_winget_list.txt"
+[string[]]$SoftwareList = Get-Content $SoftwareListFile
 
 
 # Nested hashtable with programs' name, and paths fromFilePath and toFilePath to be linked
@@ -189,6 +155,43 @@ $path_list_programs = [ordered]@{
         toFilePath = "${PSScriptRoot}\terminal\settings.json"
     }
 }
+
+
+# ----------------------------
+
+
+# Checks if winget command is currently available on Powershell
+if (!(Get-Command winget -ErrorAction Stop)) {
+    Write-Host "Winget not found, unable to continue"
+    Write-Host "Check on https://github.com/microsoft/winget-cli for instructions"
+    exit -3
+}
+else {
+    Write-Host "`nWinget command-line tool is available."
+}
+
+# Search or install
+Write-Output "This script will attempt to install multiple softwares on your system"
+$DoInstall = Read-Host -Prompt "To install programs, type 'install' to continue"
+if ($DoInstall -eq "install") {
+    $WingetCommandParam = $DoInstall
+
+    # Prompt user to install each program
+    foreach ($program1 in $SoftwareList) {
+        Install-Programs $WingetCommandParam $program1 -Confirm 
+    }
+}
+else {
+    # $WingetCommandParam = "search";
+    $DebugPreference = "Continue"
+    Write-Debug -Message "You typed the word '$DoInstall'" 
+    Write-Host "    Exiting installation...`
+    ...Now trying configuration`n"
+}
+
+
+# ----------------------------
+
 
 # Symlink software config files
 $DoSymlink = Read-Host -Prompt "To customize with your own configuration files, type 'symlink' to continue"
