@@ -134,57 +134,56 @@ else {
 # ----------------------------------------------------
 
 
-# Array with software name from software_winget_list
-$software_names = @(
-    "4KVideoDownloader",
-    "Anki",
-    "Apache Xampp",
-    "Calibre",
-    "Eclipse Temurin JDK with Hotspot",
-    "Git",
-    "JetBrains.Toolbox",
-    "Microsoft Visual Studio Code",
-    "Microsoft Windows Terminal",
-    "OBSProject.OBSStudio",
-    "OpenOffice",
-    "JavaRuntimeEnvironment",
-    "Oracle.VirtualBox",
-    "PostgreSQL",
-    "R",
-    "Posit.RStudio",
-    "Rustlang.Rustup",
-    "Slack",
-    "StarUML",
-    "VideoLAN.VLC",
-    "WinRAR",
-    "Assistente de Instalação do Windows 11",
-    "Wireshark",
-    "Wondershare PDFelement"
-)
-
-# Nested hashtable with programs' name, fromFilePath and toFilePath
+# Nested hashtable with programs' name, and paths fromFilePath and toFilePath to be linked
+<#
+.NOTES
+    'storePackages' nested key in hashtable is used for 
+    checking if file exists before symlinking
+#>
 $path_list_programs = [ordered]@{
+    # "4KVideoDownloader"
+    # "Anki"
+    # "Apache Xampp"
+    # "Calibre"
+    # "Eclipse Temurin JDK with Hotspot"
+    # "Git"
     ".gitconfig" = @{
         storePackages = "${HOME}\.gitconfig"
         fromFilePath = "${HOME}\.gitconfig"
         toFilePath = "${PSScriptRoot}\.gitconfig"
     }
     ".gitignore" = @{
-        storePackages = "${HOME}\.gitignore"
+        storePackages = "${HOME}\.gitignore" 
         fromFilePath = "${HOME}\.gitignore"
         toFilePath = "${PSScriptRoot}\.gitignore"
     }
+    # "JetBrains.Toolbox"
+    # "OBSProject.OBSStudio"
+    # "OpenOffice"
+    # "Oracle.VirtualBox"
+    # "JavaRuntimeEnvironment"
+    # "PostgreSQL"
     "profile" = @{
         storePackages = "${HOME}\Documents\WindowsPowerShell"
         fromFilePath = "${PROFILE}"
         toFilePath = "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1"
     }
-    "vlc" = @{
+    # "R"
+    # "Posit.RStudio"
+    # "Rustlang.Rustup"
+    # "Slack"
+    # "StarUML"
+    "VideoLAN.VLC" = @{
         storePackages = "${HOME}\AppData\Roaming\vlc\"
         fromFilePath = "${HOME}\AppData\Roaming\vlc\vlcrc"
         toFilePath = "${PSScriptRoot}\VLC media player\vlcrc"
     }
-    "windows_terminal" = @{
+    # "WinRAR"
+    # "Wireshark"
+    # "Wondershare PDFelement"
+    # "Assistente de Instalação do Windows 11"
+    # "Microsoft Visual Studio Code"
+    "Microsoft Windows Terminal" = @{
         storePackages = "${HOME}\AppData\Local\Packages\*Microsoft.WindowsTerminal*"
         fromFilePath = "${programDir}\LocalState\settings.json"
         toFilePath = "${PSScriptRoot}\terminal\settings.json"
