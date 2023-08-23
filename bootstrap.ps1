@@ -140,6 +140,7 @@ $software_names = @(
     "Anki",
     "Apache Xampp",
     "Calibre",
+    "Eclipse Temurin JDK with Hotspot",
     "Git",
     "JetBrains.Toolbox",
     "Microsoft Visual Studio Code",
@@ -200,7 +201,7 @@ if ($DoSymlink -eq "symlink") {
 
         $programName = $path_list_programs[$name]
 
-        # get child items from $StorePackages path in $path_list_programs above
+        # get child items from $StorePackages path on hashtable in $path_list_programs above
         Write-Output "Checking for existing files..."
         $StorePackages = $programName.storePackages
         $programDir = Get-ChildItem $StorePackages -ErrorAction SilentlyContinue
@@ -233,10 +234,7 @@ if (Get-ChildItem $VSCodeDir -ErrorAction SilentlyContinue) {
     Add-Symlink "${VSCodeDir}\User\snippets\" "${PSScriptRoot}\vscode\snippets\" > $null -Confirm
 }
 
-Write-Warning "If you see Powershell Profile errors you'll want to run ./powershell/setup/install_pwsh_modules.ps1 as well"
-Write-Output "If this is a really fresh install run install_softwares.ps1 to get going"
 Write-Output "Done, your profile will be reloaded"
-Write-Output "`n"
 
 # Reloads the Profile
 . {$PROFILE}
