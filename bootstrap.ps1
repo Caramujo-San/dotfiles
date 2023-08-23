@@ -223,18 +223,18 @@ else {
 }
 
 
-# VSCode settings
-Write-Output "Attempting to Replace VSCode settings"
-$VSCodeDir = "${HOME}\AppData\Roaming\Code"
-if (Get-ChildItem $VSCodeDir -ErrorAction SilentlyContinue) {
-    Write-Output "Found VSCode on User's AppData, creating symlink"
-    Add-Symlink "${VSCodeDir}\User\settings.json" "${PSScriptRoot}\vscode\settings.json"  > $null -Confirm
-    Add-Symlink "${VSCodeDir}\User\keybindings.json" "${PSScriptRoot}\vscode\keybindings.json"  > $null -Confirm
-    # Clear snippets before attempting to link
-    Get-Item "${VSCodeDir}\User\snippets\" -ErrorAction SilentlyContinue |
-    Remove-Item -Force -Recurse
-    Add-Symlink "${VSCodeDir}\User\snippets\" "${PSScriptRoot}\vscode\snippets\" > $null -Confirm
-}
+# # VSCode settings
+# Write-Output "Attempting to Replace VSCode settings"
+# $VSCodeDir = "${HOME}\AppData\Roaming\Code"
+# if (Get-ChildItem $VSCodeDir -ErrorAction SilentlyContinue) {
+#     Write-Output "Found VSCode on User's AppData, creating symlink"
+#     Add-Symlink "${VSCodeDir}\User\settings.json" "${PSScriptRoot}\vscode\settings.json"  > $null -Confirm
+#     Add-Symlink "${VSCodeDir}\User\keybindings.json" "${PSScriptRoot}\vscode\keybindings.json"  > $null -Confirm
+#     # Clear snippets before attempting to link
+#     Get-Item "${VSCodeDir}\User\snippets\" -ErrorAction SilentlyContinue |
+#     Remove-Item -Force -Recurse
+#     Add-Symlink "${VSCodeDir}\User\snippets\" "${PSScriptRoot}\vscode\snippets\" > $null -Confirm
+# }
 
 Write-Output "Done, your profile will be reloaded"
 
