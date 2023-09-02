@@ -31,10 +31,10 @@ Technique used for this repo:
 
 1. Git clone the repo or download it
 2. Change directory to the dotfiles folder
-3. Then run the bootstrap.ps1 on the terminal as administrator
+3. Then run the bootstrap.ps1 on Powershell as administrator
 
 ```
-.\bootstrap.ps1
+. .\bootstrap.ps1
 ```
 
 --------------
