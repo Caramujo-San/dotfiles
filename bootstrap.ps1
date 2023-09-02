@@ -144,6 +144,12 @@ $path_list_programs = [ordered]@{
         fromFilePath = "${HOME}\AppData\Roaming\vlc\vlcrc"
         toFilePath = "${PSScriptRoot}\VLC media player\vlcrc"
     }
+    "VsCode" = @{
+        storePackages = "${HOME}\AppData\Roaming\Code\User\"
+        fromFilePath = "${HOME}\AppData\Roaming\Code\User\settings.json"
+        toFilePath = "${PSScriptRoot}\vscode\settings.json"
+    }
+    $VSCodeDir = "${HOME}\AppData\Roaming\Code"
     # "WinRAR"
     # "Wireshark"
     # "Wondershare PDFelement"
@@ -212,7 +218,7 @@ if ($DoSymlink -eq "symlink") {
         if ($programDir) {
             Write-Output "Found $name on ${programDir}, create symlink ?"
             Add-Symlink $programName.fromFilePath $programName.toFilePath > $null -Confirm
-        }
+        } 
     }
 }
 else {
@@ -237,6 +243,12 @@ else {
 # }
 
 Write-Output "Done, your profile will be reloaded"
-
-# Reloads the Profile
-. {$PROFILE}
+try {
+    # Reloads the Profile
+    $Reload = . {$PROFILE}
+    $Reload
+}
+catch {
+    <#Do this if a terminating exception happens#>
+    Write-Output $Reload.Exception.Message
+}
