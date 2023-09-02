@@ -39,11 +39,11 @@ function Install-Programs {
         Write-Debug "Installing program..."
         # If the user confirmed Yes, or user didn't use -Confirm
         if ($PSCmdlet.ShouldProcess($program)) {
-            Write-Host "`n"
-            &winget $WingetCommandParam -e --id $program2
+            Write-Output "`n"
+            Winget $WingetCommandParam -e --id $program2
         }
         else {
-            Write-Host $program2 " will not be installed."
+            Write-Output $program2 " will not be installed."
             return -1
         }
     }
@@ -83,7 +83,7 @@ Function Add-Symlink {
             New-Item -ItemType SymbolicLink -Path $from -Target $to -Force
         }
         else {
-            Write-Host "Files will not be linked."
+            Write-Output "Files will not be linked."
             return -2
         }
     }
@@ -173,30 +173,39 @@ $path_list_programs = [ordered]@{
 
 # Checks if winget command is currently available on Powershell
 if (!(Get-Command winget -ErrorAction Stop)) {
-    Write-Host "Winget not found, unable to continue"
-    Write-Host "Check on https://github.com/microsoft/winget-cli for instructions"
+    Write-Output "Winget not found, unable to continue"
+    Write-Output "Check on https://github.com/microsoft/winget-cli for instructions"
     exit -3
 }
 else {
-    Write-Host "`nWinget command-line tool is available."
+    Write-Output "`nWinget command-line tool is available."
 }
 
 # Search or install
 Write-Output "This script will attempt to install multiple softwares on your system"
 $DoInstall = Read-Host -Prompt "To install programs, type 'install' to continue"
+
 if ($DoInstall -eq "install") {
     $WingetCommandParam = $DoInstall
 
     # Prompt user to install each program
     foreach ($program1 in $SoftwareList.Sources.Packages) {
-        Install-Programs $WingetCommandParam $program1 -Confirm 
+        $InstallProg = Read-Host -Prompt "Install $program1 ? [Yes / No / 'q' for cancel]"
+
+        if ($InstallProg -eq "Y".ToLower()) {
+            Install-Programs $WingetCommandParam $program1 
+
+        } elseif ($InstallProg -eq "Q".ToLower()) {
+            Write-Verbose "Quitting installation...`n"
+            break
+        }
     }
 }
 else {
     # $WingetCommandParam = "search";
     $DebugPreference = "Continue"
     Write-Debug -Message "You typed the word '$DoInstall'" 
-    Write-Host "    Exiting installation...`
+    Write-Output "    Exiting installation...`
     ...Now trying configuration`n"
 }
 
@@ -206,6 +215,7 @@ else {
 
 # Symlink software config files
 $DoSymlink = Read-Host -Prompt "To customize with your own configuration files, type 'symlink' to continue"
+
 if ($DoSymlink -eq "symlink") {
     $WingetCommandParam = $DoSymlink
     
@@ -220,32 +230,25 @@ if ($DoSymlink -eq "symlink") {
         $programDir = Get-ChildItem $StorePackages -ErrorAction SilentlyContinue
 
         # Prompt user to Symlink between each pair of files
-        if ($programDir) {
-            Write-Output "Found $name on ${programDir}, create symlink ?"
-            Add-Symlink $programName.fromFilePath $programName.toFilePath > $null -Confirm
-        } 
+        $DOsymlink = Read-Host -Prompt "Install $program1 ? [Yes / No / 'q' for cancel]"
+
+        if ($programDir -and ($DOsymlink -eq "Y".ToLower())) {
+            Write-Output "Found $name on ${programDir}, creating symlink..."
+            Add-Symlink $programName.fromFilePath $programName.toFilePath > $null
+
+        } elseif ($DOsymlink -eq "Q".ToLower()) {
+            Write-Verbose "Quitting symlinking...`n" 
+            break
+        }
     }
 }
 else {
     # $WingetCommandParam = "search";
-    Write-Host "`nExiting customization..."
-    Write-Host "Have a nice day !`n"
+    Write-Output "Exiting customization..."
+    Write-Output "Have a nice day !`n"
     Exit -4
 }
 
-
-# # VSCode settings
-# Write-Output "Attempting to Replace VSCode settings"
-# $VSCodeDir = "${HOME}\AppData\Roaming\Code"
-# if (Get-ChildItem $VSCodeDir -ErrorAction SilentlyContinue) {
-#     Write-Output "Found VSCode on User's AppData, creating symlink"
-#     Add-Symlink "${VSCodeDir}\User\settings.json" "${PSScriptRoot}\vscode\settings.json"  > $null -Confirm
-#     Add-Symlink "${VSCodeDir}\User\keybindings.json" "${PSScriptRoot}\vscode\keybindings.json"  > $null -Confirm
-#     # Clear snippets before attempting to link
-#     Get-Item "${VSCodeDir}\User\snippets\" -ErrorAction SilentlyContinue |
-#     Remove-Item -Force -Recurse
-#     Add-Symlink "${VSCodeDir}\User\snippets\" "${PSScriptRoot}\vscode\snippets\" > $null -Confirm
-# }
 
 Write-Output "Done, your profile will be reloaded"
 try {
