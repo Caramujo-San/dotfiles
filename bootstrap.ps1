@@ -96,9 +96,14 @@ Function Add-Symlink {
 
 
 # Get the content of winget programs' ids to variable $SoftwareList
-$SoftwareListFile = ".\software_winget_list.txt"
-[string[]]$SoftwareList = Get-Content $SoftwareListFile
+# $SoftwareListFile = ".\software_winget_list.txt"
+# [string[]]$SoftwareList = Get-Content $SoftwareListFile
 
+if (!(Get-ChildItem ".\software_winget_list.json")) {
+    Winget export -o ".\software_winget_list.json"
+}
+
+$SoftwareListJsonFile = Get-Content -Path ".\software_winget_list.json" | ConvertFrom-Json
 
 # Nested hashtable with programs' name, and paths fromFilePath and toFilePath to be linked
 <#
@@ -183,8 +188,8 @@ if ($DoInstall -eq "install") {
     $WingetCommandParam = $DoInstall
 
     # Prompt user to install each program
-    foreach ($program1 in $SoftwareList) {
-        Install-Programs $WingetCommandParam $program1 -Confirm 
+    foreach ($program1 in $SoftwareListJsonFile.Packages) {
+        Install-Programs $WingetCommandParam $program1.key -Confirm 
     }
 }
 else {
