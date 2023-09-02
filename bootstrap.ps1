@@ -94,16 +94,17 @@ Function Add-Symlink {
 #                     Functions calls                        |
 #------------------------------------------------------------#
 
-
-# Get the content of winget programs' ids to variable $SoftwareList
-# $SoftwareListFile = ".\software_winget_list.txt"
-# [string[]]$SoftwareList = Get-Content $SoftwareListFile
-
+# Check if there is a json list
 if (!(Get-ChildItem ".\software_winget_list.json")) {
-    Winget export -o ".\software_winget_list.json"
+    # Get list of packages intalled on system
+    Write-Verbose "Do you want to get list of packages intalled on this system ?"
+    Winget export -o ".\software_winget_list.json" -Confirm
 }
 
-$SoftwareListJsonFile = Get-Content -Path ".\software_winget_list.json" | ConvertFrom-Json
+# Get winget programs list to variable $SoftwareList
+$SoftwareList = Get-Content -Path ".\software_winget_list.json" | ConvertFrom-Json
+
+
 
 # Nested hashtable with programs' name, and paths fromFilePath and toFilePath to be linked
 <#
@@ -154,7 +155,6 @@ $path_list_programs = [ordered]@{
         fromFilePath = "${HOME}\AppData\Roaming\Code\User\settings.json"
         toFilePath = "${PSScriptRoot}\vscode\settings.json"
     }
-    $VSCodeDir = "${HOME}\AppData\Roaming\Code"
     # "WinRAR"
     # "Wireshark"
     # "Wondershare PDFelement"
@@ -188,8 +188,8 @@ if ($DoInstall -eq "install") {
     $WingetCommandParam = $DoInstall
 
     # Prompt user to install each program
-    foreach ($program1 in $SoftwareListJsonFile.Packages) {
-        Install-Programs $WingetCommandParam $program1.key -Confirm 
+    foreach ($program1 in $SoftwareList.Sources.Packages) {
+        Install-Programs $WingetCommandParam $program1 -Confirm 
     }
 }
 else {
