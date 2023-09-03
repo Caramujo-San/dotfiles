@@ -187,16 +187,17 @@ $DoInstall = Read-Host -Prompt "To install programs, type 'install' to continue"
 
 if ($DoInstall -eq "install") {
     $WingetCommandParam = $DoInstall
-
+    
     # Prompt user to install each program
-    foreach ($program1 in $SoftwareList.Sources.Packages) {
-        $InstallProg = Read-Host -Prompt "Install $program1 ? [Yes / No / 'q' for cancel]"
-
+    foreach ($program1 in $SoftwareList.Sources.packages) {
+        $program1PackageIdentifier = $program1.PackageIdentifier
+        $InstallProg = Read-Host -Prompt "Install ${program1PackageIdentifier} ? [Yes / No / 'q' to cancel]" 
+        
         if ($InstallProg -eq "Y".ToLower()) {
-            Install-Programs $WingetCommandParam $program1 
+            Install-Programs $WingetCommandParam $program1PackageIdentifier 
 
         } elseif ($InstallProg -eq "Q".ToLower()) {
-            Write-Verbose "Quitting installation...`n"
+            Write-Output "Quitting installation...`n"
             break
         }
     }
@@ -204,7 +205,7 @@ if ($DoInstall -eq "install") {
 else {
     # $WingetCommandParam = "search";
     $DebugPreference = "Continue"
-    Write-Debug -Message "You typed the word '$DoInstall'" 
+    Write-Debug -Message "You typed '$DoInstall'" 
     Write-Output "    Exiting installation...`
     ...Now trying configuration`n"
 }
@@ -222,7 +223,7 @@ if ($DoSymlink -eq "symlink") {
     # Check if file exists and Prompt user to Symlink
     foreach ($name in $path_list_programs.keys) {
 
-        $programName = $path_list_programs[$name]
+        $programName = $name
 
         # get child items from $StorePackages path on hashtable in $path_list_programs above
         Write-Output "Checking for existing files..."
@@ -230,23 +231,24 @@ if ($DoSymlink -eq "symlink") {
         $programDir = Get-ChildItem $StorePackages -ErrorAction SilentlyContinue
 
         # Prompt user to Symlink between each pair of files
-        $DOsymlink = Read-Host -Prompt "Install $program1 ? [Yes / No / 'q' for cancel]"
+        $DOsymlink = Read-Host -Prompt "Symlink $programName ? [Yes / No / 'q' for cancel]"
 
         if ($programDir -and ($DOsymlink -eq "Y".ToLower())) {
-            Write-Output "Found $name on ${programDir}, creating symlink..."
+            Write-Output "Found ${name} on ${programDir}, creating symlink..."
             Add-Symlink $programName.fromFilePath $programName.toFilePath > $null
 
         } elseif ($DOsymlink -eq "Q".ToLower()) {
-            Write-Verbose "Quitting symlinking...`n" 
-            break
+            Write-Output "Quitting symlinking...`n" 
+            Exit -4
         }
     }
 }
 else {
     # $WingetCommandParam = "search";
+    Write-Debug -Message "You typed '$DoSymlink'"
     Write-Output "Exiting customization..."
     Write-Output "Have a nice day !`n"
-    Exit -4
+    Exit -5
 }
 
 
