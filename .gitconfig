@@ -1,0 +1,14 @@
+[core]
+	editor = \"C:\\Users\\gusta\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\" --wait
+[user]
+	email = gustavocjorge11@yahoo.com.br
+	name = Gustavo Jorge
+[gui]
+	recentrepo = C:/Users/gusta/Desktop/wiki
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[alias]
+	graph = log --all --decorate --oneline --graph
