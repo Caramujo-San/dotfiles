@@ -15,8 +15,7 @@
 function Install-Programs {
 
     [CmdletBinding(
-        SupportsShouldProcess=$True, # Allows the use of -Confirm and -Whatif
-        ConfirmImpact="Medium" # Confirms before installing
+        SupportsShouldProcess=$True # Allows the use of -Confirm and -Whatif
     )]
     param (
         [Parameter(Mandatory=$True)]
@@ -28,16 +27,12 @@ function Install-Programs {
     Begin {
 	    # Uncomment the line below to activate -whatif
         # $WhatIfPreference = $True 
-	
-	    # Uncomment the line below not to ask for confirmation to install
-		# $ConfirmPreference = "High"
 	}
 
     # Contains the main part of the function
     Process {
         # Debug message
         Write-Debug "Installing program..."
-        # If the user confirmed Yes, or user didn't use -Confirm
         if ($PSCmdlet.ShouldProcess($program)) {
             Write-Output "`n"
             Winget $WingetCommandParam -e --id $program2
@@ -56,8 +51,7 @@ function Install-Programs {
 # Creates a Symlink between two files
 Function Add-Symlink {
     [CmdletBinding(
-        SupportsShouldProcess=$True, # Allows the use of -Confirm and -Whatif
-        ConfirmImpact="Medium" # Confirms before linking
+        SupportsShouldProcess=$True # Allows the use of -Confirm and -Whatif
     )]
     param (
         [Parameter(Mandatory=$True)]
@@ -69,16 +63,12 @@ Function Add-Symlink {
     Begin {
 	    # Uncomment the line below to activate -whatif
 	    # $WhatIfPreference = $True
-	
-	    # Uncomment the line below not to ask for confirmation when moving each file
-		# $ConfirmPreference = "High"
 	}
 
     # Contains the main part of the function
     Process {
         # Debug message
         Write-Debug "Symlinking file..."
-        # If the user confirmed Yes, or user didn't use -Confirm
         if ($PSCmdlet.ShouldProcess($from, $to)) {
             New-Item -ItemType SymbolicLink -Path $from -Target $to -Force
         }
@@ -105,7 +95,6 @@ if (!(Get-ChildItem ".\software_winget_list.json")) {
 $SoftwareList = Get-Content -Path ".\software_winget_list.json" | ConvertFrom-Json
 
 
-
 # Nested hashtable with programs' name, and paths fromFilePath and toFilePath to be linked
 <#
 .NOTES
@@ -120,12 +109,12 @@ $path_list_programs = [ordered]@{
     # "Eclipse Temurin JDK with Hotspot"
     # "Git"
     ".gitconfig" = @{
-        storePackages = "${HOME}\.gitconfig"
+        storePackages = "${HOME}"
         fromFilePath = "${HOME}\.gitconfig"
         toFilePath = "${PSScriptRoot}\.gitconfig"
     }
     ".gitignore" = @{
-        storePackages = "${HOME}\.gitignore" 
+        storePackages = "${HOME}" 
         fromFilePath = "${HOME}\.gitignore"
         toFilePath = "${PSScriptRoot}\.gitignore"
     }
@@ -136,7 +125,7 @@ $path_list_programs = [ordered]@{
     # "JavaRuntimeEnvironment"
     # "PostgreSQL"
     "profile" = @{
-        storePackages = "${HOME}\Documents\WindowsPowerShell"
+        storePackages = "${HOME}\Documents\WindowsPowerShell\"
         fromFilePath = "${PROFILE}"
         toFilePath = "${PSScriptRoot}\powershell\Microsoft.PowerShell_profile.ps1"
     }
@@ -221,22 +210,14 @@ if ($DoSymlink -eq "symlink") {
     $WingetCommandParam = $DoSymlink
     
     # Check if file exists and Prompt user to Symlink
-    foreach ($name in $path_list_programs.keys) {
-
-        $programName = $name
-
-        # get child items from $StorePackages path on hashtable in $path_list_programs above
-        Write-Output "Checking for existing files..."
-        $StorePackages = $programName.storePackages
-        $programDir = Get-ChildItem $StorePackages -ErrorAction SilentlyContinue
+    foreach ($name in $path_list_programs.Keys) {
 
         # Prompt user to Symlink between each pair of files
-        $DOsymlink = Read-Host -Prompt "Symlink $programName ? [Yes / No / 'q' for cancel]"
+        $DOsymlink = Read-Host -Prompt "Do you wish to symlink $name ? [Yes / No / 'q' for cancel]"
 
-        if ($programDir -and ($DOsymlink -eq "Y".ToLower())) {
-            Write-Output "Found ${name} on ${programDir}, creating symlink..."
-            Add-Symlink $programName.fromFilePath $programName.toFilePath > $null
-
+        if ($programDir -and ($DOsymlink -eq "Y".ToLower())) {   
+            Add-Symlink -from $path_list_programs.$name.fromFilePath -to $path_list_programs.$name.toFilePath > $null
+            Write-Debug -Message "Symlinking file..."
         } elseif ($DOsymlink -eq "Q".ToLower()) {
             Write-Output "Quitting symlinking...`n" 
             Exit -4
