@@ -27,7 +27,7 @@ Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
 
 # Setting alias for locating a file or directory
 
-function Locate-Files {
+function Get-LocateFiles {
     <#
 	.LINK
 	https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/set-alias?view=powershell-7.3
@@ -37,7 +37,7 @@ function Locate-Files {
     #>
 	
     [CmdletBinding(
-        SupportsShouldProcess=$True
+        # SupportsShouldProcess=$True 
     )]
     param (
         [Parameter(Mandatory=$True)]
@@ -52,11 +52,11 @@ function Locate-Files {
     # Contains the main part of the function
     Process {
         # Get-ChildItem cmdlet with 
-        Get-ChildItem -Recurse | where {$_.Name -like $FileOrDirectory} | select FullName
+        Get-ChildItem -Recurse | Where-Object {$_.Name -like $FileOrDirectory} | Select-Object FullName 
     }
 }
 
-Set-Alias -Name locate -Value Locate-Files
+Set-Alias -Name locate -Value Get-LocateFiles
 
 
 # Setting alias for Get-Help cmdlet

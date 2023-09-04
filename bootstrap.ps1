@@ -1,6 +1,6 @@
 ﻿<#
 .DESCRIPTION
-    Install programs with winget from .txt list 
+    Install programs with winget from .json list 
     and 
     Creates a symlink between two files on windows
 #>
@@ -11,7 +11,7 @@
 #------------------------------------------------------------#
 
 
-# Install programs in the software_winget_list.txt file
+# Install programs in the software_winget_list.json file
 function Install-Programs {
 
     [CmdletBinding(
