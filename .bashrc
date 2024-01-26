@@ -120,7 +120,12 @@ fi
 export JAVA_HOME=/usr/lib/jvm/jdk-17
 export PATH="$PATH:$JAVA_HOME/bin" 
 
-# alias to sudo docker
-alias docker='sudo docker'
-# alias to dotfiles git bare repository
-alias dotcfg='/usr/bin/git --git-dir=/home/caramujosan/.dotfiles/ --work-tree=/home/caramujosan'
+# alias to git bare repo
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+source $HOME/.tmc-autocomplete.sh || true
+source $HOME/.tmc-autocomplete.sh || true
+
+# Path to ChromeDriver
+export PATH="$PATH:$HOME/Programas_instalados_(não_pela_loja_nem_cli)/chromedriver"
+
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
